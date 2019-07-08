@@ -9,20 +9,13 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build Docker image
-          command: docker build -t $IMAGE_NAME:latest .
-  publish:
-    environment:
-      IMAGE_NAME: "harbor.linkorb.com/linkorb/php-docker-base"
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - setup_remote_docker
-      - run:
-          name: Publish Docker Image to Harbor
+          name: Connect to Harbor
           command: |
             echo $DOCKER_USERNAME
             docker login harbor.linkorb.com -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run:
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME:latest .
       - run:
           name: Publish Docker Image to Harbor
           command: docker push $IMAGE_NAME:latest
@@ -30,13 +23,4 @@ workflows:
   version: 2
   build-master:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: master
-      - publish:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
+      - build
