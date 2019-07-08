@@ -23,6 +23,9 @@ jobs:
           command: |
             echo $DOCKER_USERNAME
             docker login harbor.linkorb.com -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run:
+          name: Publish Docker Image to Harbor
+          command: docker push $IMAGE_NAME:latest
 workflows:
   version: 2
   build-master:
