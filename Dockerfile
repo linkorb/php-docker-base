@@ -18,4 +18,6 @@ COPY wait-for-it.sh /usr/local/sbin/wait-for-it.sh
 
 RUN chown -R www-data /var/www && chmod +x /usr/local/sbin/wait-for-it.sh
 
+#CMD sed -i "s/80/9000/g" /etc/apache2/sites-enabled/000-default.conf /etc/apache2/ports.conf
+
 EXPOSE 9000
