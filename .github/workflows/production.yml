@@ -26,6 +26,6 @@ jobs:
     - name: Docker push with latest tag
       run: docker push ${DOCKER_TAG}${REPO_NAME}:latest
     - name: Docker retag new image with commit hash
-      run: docker image tag ${DOCKER_TAG}:latest ${DOCKER_TAG}${REPO_NAME}:${{ env.SHA8 }}
+      run: docker image tag ${DOCKER_TAG}${REPO_NAME}:latest ${DOCKER_TAG}${REPO_NAME}:${{ env.SHA8 }}
     - name: Docker push with commit hash tag
       run: docker push ${DOCKER_TAG}${REPO_NAME}:${{ env.SHA8 }}
