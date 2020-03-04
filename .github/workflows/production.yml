@@ -10,7 +10,8 @@ on:
 jobs:
   build:
     env:
-      REPO_NAME: $(echo ${{ github.repository }} | awk -F"/" '{print $2}')
+      REPO_NAME2: $(echo ${{ github.repository }} | awk -F"/" '{print $2}')
+      REPO_NAME2: php-docker-base
       SHA8: $(echo ${GITHUB_SHA} | cut -c1-8)
       DOCKER_TAG: docker.pkg.github.com/${{ github.repository }}/
 
