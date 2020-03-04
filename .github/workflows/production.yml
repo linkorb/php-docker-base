@@ -12,7 +12,7 @@ jobs:
     env:
       REPO_NAME: docker-php-base
       SHA8: $(echo ${GITHUB_SHA} | cut -c1-8)
-      DOCKER_TAG: docker.pkg.github.com/linkorb/docker-php-base/docker-php-base
+      DOCKER_TAG: docker.pkg.github.com/linkorb/php-docker-base/php-docker-base
 
     runs-on: ubuntu-latest
 
