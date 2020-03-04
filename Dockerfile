@@ -1,23 +1,40 @@
-FROM php:7.3.6-apache-stretch
+FROM php:7-apache
 
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl -f http://localhost:9000/ || exit 1
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_PID_FILE /var/run/apache2/apache2.pid
+ENV APACHE_SERVER_NAME php-docker-base-linkorb
 
-RUN docker-php-ext-install pdo pdo_mysql
+ENV APP_ENV=prod
 
-# Install NPM
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install --yes nodejs git zip unzip && apt-get clean && rm -rf /var/lib/apt/lists
+COPY ./apache2.conf      /etc/apache2/apache2.conf
+COPY ./apache-vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY ./security.conf     /etc/apache2/conf-available/security.conf \
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-# Install Composer
-RUN curl -sL https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer | php
-RUN mv composer.phar /usr/bin/composer && chmod +x /usr/bin/composer
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends git nodejs npm unzip zip \
+  && install-php-extensions apcu gd gmp intl opcache pdo pdo_mysql sockets zip \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p /app/config/secrets/dev \
+  && mkdir -p /app/public/build \
+  && chown -R www-data:www-data /app \
+  && chown -R www-data:www-data /var/www \
+  && a2enmod rewrite \
+  && service apache2 restart
 
-COPY httpd.conf /etc/apache2/sites-enabled/000-default.conf
-COPY php.ini /usr/local/etc/php/php.ini
-COPY wait-for-it.sh /usr/local/sbin/wait-for-it.sh
+COPY --chown=www-data:www-data . /app
 
-RUN chown -R www-data /var/www && chmod +x /usr/local/sbin/wait-for-it.sh
+WORKDIR /app
 
-#CMD sed -i "s/80/9000/g" /etc/apache2/sites-enabled/000-default.conf /etc/apache2/ports.conf
+USER root
 
-EXPOSE 9000
+#COPY docker/app-docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+#ENTRYPOINT ["docker-entrypoint"]
+
+EXPOSE 80
+CMD ["apache2-foreground"]
