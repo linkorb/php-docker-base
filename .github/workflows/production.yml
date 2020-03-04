@@ -12,7 +12,7 @@ jobs:
     env:
       REPO_NAME: $(echo ${{ github.repository }} | awk -F"/" '{print $2}')
       SHA8: $(echo ${GITHUB_SHA} | cut -c1-8)
-      DOCKER_TAG: docker.pkg.github.com/${{ github.repository }}/${ REPO_NAME }
+      DOCKER_TAG: docker.pkg.github.com/${{ github.repository }}/
 
     runs-on: ubuntu-latest
 
@@ -21,10 +21,10 @@ jobs:
     - name: Docker login
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.pkg.github.com --username automation@linkorb.com --password-stdin
     - name: Build the Docker image
-      run: docker build . --tag ${DOCKER_TAG}:latest --file Dockerfile
+      run: docker build . --tag ${DOCKER_TAG}${REPO_NAME}:latest --file Dockerfile
     - name: Docker push with latest tag
-      run: docker push ${DOCKER_TAG}:latest
+      run: docker push ${DOCKER_TAG}${REPO_NAME}:latest
     - name: Docker retag new image with commit hash
-      run: docker image tag ${DOCKER_TAG}:latest ${DOCKER_TAG}:${{ env.SHA8 }}
+      run: docker image tag ${DOCKER_TAG}:latest ${DOCKER_TAG}${REPO_NAME}:${{ env.SHA8 }}
     - name: Docker push with commit hash tag
-      run: docker push ${DOCKER_TAG}:${{ env.SHA8 }}
+      run: docker push ${DOCKER_TAG}${REPO_NAME}:${{ env.SHA8 }}
