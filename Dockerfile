@@ -1,10 +1,12 @@
 FROM php:7-apache
 
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_LOG_DIR /var/log/apache2
-ENV APACHE_PID_FILE /var/run/apache2/apache2.pid
+EXPOSE 80
+
+ENV APACHE_RUN_USER    www-data
+ENV APACHE_RUN_GROUP   www-data
+ENV APACHE_LOCK_DIR    /var/lock/apache2
+ENV APACHE_LOG_DIR     /var/log/apache2
+ENV APACHE_PID_FILE    /var/run/apache2/apache2.pid
 ENV APACHE_SERVER_NAME php-docker-base-linkorb
 
 ENV APP_ENV=prod
@@ -23,17 +25,16 @@ RUN apt-get update \
   && mkdir -p /app/public/build \
   && chown -R www-data:www-data /app \
   && chown -R www-data:www-data /var/www \
-  && a2enmod rewrite \
-  && service apache2 restart
+  && a2enmod rewrite
 
-COPY --chown=www-data:www-data . /app
+COPY --chown=www-data:www-data index.html /app
 
 WORKDIR /app
 
 USER root
 
-#COPY docker/app-docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-#ENTRYPOINT ["docker-entrypoint"]
+COPY app-docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 
-EXPOSE 80
+ENTRYPOINT ["docker-entrypoint"]
+
 CMD ["apache2-foreground"]
