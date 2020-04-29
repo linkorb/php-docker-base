@@ -17,7 +17,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends git nodejs npm unzip zip libbz2-dev openssh-client \
+  && apt-get install -y --no-install-recommends git nodejs npm unzip zip php-bz2 libbz2-dev openssh-client \
   && install-php-extensions apcu gd gmp intl opcache pdo pdo_mysql sockets zip \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
