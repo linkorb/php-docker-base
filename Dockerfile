@@ -17,11 +17,15 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends git nodejs npm unzip zip php-bz2 libbz2-dev openssh-client \
-  && install-php-extensions apcu gd gmp intl opcache pdo pdo_mysql sockets zip \
+  && apt-get install -y --no-install-recommends git nodejs npm unzip zip libbz2-dev openssh-client
+
+RUN docker-php-ext-install bz2 \
+  && install-php-extensions apcu gd gmp intl opcache pdo_mysql sockets zip  \
+  && apt-get autoremove \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
-  && mkdir -p /app/config/secrets/dev \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /app/config/secrets/dev \
   && mkdir -p /app/public/build \
   && chown -R www-data:www-data /app \
   && chown -R www-data:www-data /var/www \
