@@ -11,6 +11,8 @@ ENV APACHE_SERVER_NAME php-docker-base-linkorb
 
 ENV APP_ENV=prod
 
+COPY ./php.ini-production "$PHP_INI_DIR/php.ini"
+
 COPY ./apache2.conf      /etc/apache2/apache2.conf
 COPY ./apache-vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
