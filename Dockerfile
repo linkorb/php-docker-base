@@ -9,8 +9,6 @@ ENV APACHE_LOG_DIR     /var/log/apache2
 ENV APACHE_PID_FILE    /var/run/apache2/apache2.pid
 ENV APACHE_SERVER_NAME php-docker-base-linkorb
 
-ENV APP_ENV=prod
-
 COPY ./php.ini-production "$PHP_INI_DIR/php.ini"
 
 COPY ./apache2.conf      /etc/apache2/apache2.conf
