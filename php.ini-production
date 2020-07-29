@@ -15,7 +15,7 @@ zlib.output_compression = Off
 implicit_flush = Off
 unserialize_callback_func =
 serialize_precision = 17
-disable_functions = 
+disable_functions =
 disable_classes =
 
 zend.enable_gc = On
@@ -172,7 +172,7 @@ bcmath.scale = 0
 
 [Session]
 session.save_handler = files
-session.save_path = 
+session.save_path =
 session.use_cookies = 1
 session.use_only_cookies = 1
 session.name = SID
@@ -187,7 +187,7 @@ session.serialize_handler = php
 
 session.gc_probability = 1
 session.gc_divisor = 1000
-session.gc_maxlifetime = 1440
+session.gc_maxlifetime = 2592000
 
 session.bug_compat_42 = Off
 session.bug_compat_warn = Off
