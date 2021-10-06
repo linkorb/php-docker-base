@@ -1,12 +1,12 @@
 name: CleanupOldPackages
 
-#on:
+on:
+  workflow_dispatch:
 #  schedule:
 #  - cron: 0 13 * * 2
 #  push:
 #    branches:
 #    - master
-#  workflow_dispatch:
 
 jobs:
   cleanup:

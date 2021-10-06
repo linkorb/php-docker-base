@@ -8,7 +8,7 @@ on:
 #  - cron: 30 1 * * 1
 
 jobs:
-  build:
+  gh-packages:
     env:
       REPO_NAME2: $(echo ${{ github.repository }} | awk -F"/" '{print $2}')
       REPO_NAME: php-docker-base
@@ -29,3 +29,23 @@ jobs:
       run: docker image tag ${DOCKER_TAG}${REPO_NAME}:latest ${DOCKER_TAG}${REPO_NAME}:${{ env.SHA8 }}
     - name: Docker push with commit hash tag
       run: docker push ${DOCKER_TAG}${REPO_NAME}:${{ env.SHA8 }}
+
+  ghcr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: GitHub Environment Variables Action
+      uses: FranzDiebold/github-env-vars-action@v2
+
+    - uses: actions/checkout@v2
+    - name: GHCR login
+      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login ghcr.io --username automation@linkorb.com --password-stdin
+    - name: Build the container image
+      run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest --file Dockerfile
+    - name: Push with latest tag
+      run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest
+    - name: Retag new image with commit hash
+      run: docker image tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:$(echo ${GITHUB_SHA} | cut -c1-8)
+    - name: Push with commit hash tag
+      run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:$(echo ${GITHUB_SHA} | cut -c1-8)
+
