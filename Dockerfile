@@ -1,5 +1,5 @@
-LABEL org.opencontainers.image.source https://github.com/linkorb/php-docker-base
 FROM php:7-apache
+LABEL org.opencontainers.image.source https://github.com/linkorb/php-docker-base
 
 EXPOSE 80
 
