@@ -1,6 +1,7 @@
 name: Build container for production
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - master
