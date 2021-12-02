@@ -17,9 +17,16 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends git unzip zip libbz2-dev openssh-client curl software-properties-common vim telnet iputils-ping joe
+  && apt-get install -y --no-install-recommends git unzip zip libbz2-dev openssh-client curl software-properties-common vim telnet iputils-ping joe \
+  && apt-get autoremove \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN curl https://deb.nodesource.com/setup_14.x -o install_node.sh && chmod +x install_node.sh && ./install_node.sh && apt install -y nodejs make
+
+RUN curl https://deb.nodesource.com/setup_14.x -o install_node.sh && chmod +x install_node.sh && ./install_node.sh && apt install -y nodejs make \
+  && apt-get autoremove \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install bz2 \
   && install-php-extensions apcu gd gmp intl opcache pdo_mysql sockets zip  \
