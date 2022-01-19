@@ -29,7 +29,7 @@ RUN curl https://deb.nodesource.com/setup_14.x -o install_node.sh && chmod +x in
   && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install bz2 \
-  && install-php-extensions apcu gd gmp intl opcache pdo_mysql sockets zip  \
+  && install-php-extensions apcu gd gmp intl opcache pdo_mysql pdo_pgsql sockets zip  \
   && apt-get autoremove \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
