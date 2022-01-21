@@ -17,7 +17,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends git unzip zip libbz2-dev openssh-client curl software-properties-common vim telnet iputils-ping joe \
+  && apt-get install -y --no-install-recommends git unzip zip libbz2-dev openssh-client curl software-properties-common vim telnet iputils-ping joe jq \
   && apt-get autoremove \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
