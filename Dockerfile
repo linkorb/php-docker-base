@@ -23,7 +23,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 
-RUN curl https://deb.nodesource.com/setup_14.x -o install_node.sh && chmod +x install_node.sh && ./install_node.sh && apt install -y nodejs make \
+RUN curl https://deb.nodesource.com/setup_16.x -o install_node.sh && chmod +x install_node.sh && ./install_node.sh && apt install -y nodejs make \
   && apt-get autoremove \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
