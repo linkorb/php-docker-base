@@ -55,7 +55,11 @@ jobs:
       run: docker image tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:$(echo ${GITHUB_SHA} | cut -c1-8)
     - name: Push with commit hash tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:$(echo ${GITHUB_SHA} | cut -c1-8)
-
+    - name: Retag new image with php7 tag
+      run: docker image tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7
+    - name: Push with commit php7 tag
+      run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7
+      
     #php8
     - name: Build the container image
       run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8 --file Dockerfile.php8
