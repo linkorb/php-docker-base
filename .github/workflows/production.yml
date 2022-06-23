@@ -1,4 +1,4 @@
-name: BuildnContainerForProduction
+name: BuildContainerForProduction
 
 on:
   workflow_dispatch:
@@ -45,10 +45,19 @@ jobs:
 
     - name: GHCR login
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login ghcr.io --username automation@linkorb.com --password-stdin
-    
+
     #php7
     - name: Build the container image
       run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest --file Dockerfile.php7
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL'
     - name: Push with latest tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest
     - name: Retag new image with commit hash
@@ -59,13 +68,34 @@ jobs:
       run: docker image tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7
     - name: Push with commit php7 tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7
-      
+
     #php8
     - name: Build the container image
       run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8 --file Dockerfile.php8
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL'
     - name: Push with php8 tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8
     - name: Retag new image with commit hash
       run: docker image tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8 ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-$(echo ${GITHUB_SHA} | cut -c1-8)
     - name: Push with commit hash tag and php8 tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-$(echo ${GITHUB_SHA} | cut -c1-8)
+
+    - name: Delete old unused container images
+      uses: snok/container-retention-policy@v1
+      with:
+        image-names: "${{ env.CI_REPOSITORY_NAME }}"
+        cut-off: A month ago UTC
+        account-type: org
+        org-name: linkorb
+        keep-at-least: 10
+        skip-tags: latest
+        untagged-only: false
+        token: ${{ secrets.DOCKER_PASSWORD }}
