@@ -48,7 +48,7 @@ jobs:
     #php7-review
     - name: Build the PHP7 review container image
       run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7-review --file Dockerfile.php7-review
-    - name: Push with commit php7 tag
+    - name: Push with commit php7-review tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7-review
 
     #php8
@@ -73,7 +73,7 @@ jobs:
     #php8-review
     - name: Build the PHP8 review container image
       run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-review --file Dockerfile.php8-review
-    - name: Push with commit php8 tag
+    - name: Push with commit php8-review tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-review
 
     - name: Delete old unused container images
