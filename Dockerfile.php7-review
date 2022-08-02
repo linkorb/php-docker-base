@@ -1,18 +1,19 @@
 FROM ghcr.io/linkorb/php-docker-base:php7
 
-WORKDIR /app
 
-#USER www-data
+RUN mkdir -p /opt
 
-# uncomment these lines if you need things from Packagist
-# dont forget to give this repo access to the token on GH
-#ARG PACKAGIST_TOKEN
-#ARG PACKAGIST_USER
-#RUN /usr/bin/composer config --global --auth http-basic.repo.packagist.com "$PACKAGIST_USER" "$PACKAGIST_TOKEN"
-#RUN COMPOSER_MEMORY_LIMIT=-1 /usr/bin/composer install --no-scripts --no-dev
+WORKDIR /opt/
 
-#RUN npm install && node_modules/.bin/encore production && rm -rf node_modules
+# install php-tools
+RUN git clone https://github.com/linkorb/php-tools.git
+RUN cd php-tools &&  COMPOSER_MEMORY_LIMIT=-1 /usr/bin/composer install
 
-#USER root
+# install reviewdog
+RUN curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
+RUN mv /opt/bin/reviewdog /usr/local/bin
+
+# add php-tools to search path
+RUN echo "export PATH=$PATH:/opt/php-tools/bin" >> /root/.bashrc
 
 ENTRYPOINT ["apache2-foreground"]
