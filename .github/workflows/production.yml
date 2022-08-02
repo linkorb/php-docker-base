@@ -45,6 +45,12 @@ jobs:
     - name: Push with commit php7 tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7
 
+    #php7-review
+    - name: Build the PHP7 review container image
+      run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7-review --file Dockerfile.php7-review
+    - name: Push with commit php7 tag
+      run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php7-review
+
     #php8
     - name: Build the container image
       run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8 --file Dockerfile.php8
@@ -63,6 +69,12 @@ jobs:
       run: docker image tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8 ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-$(echo ${GITHUB_SHA} | cut -c1-8)
     - name: Push with commit hash tag and php8 tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-$(echo ${GITHUB_SHA} | cut -c1-8)
+
+    #php8-review
+    - name: Build the PHP8 review container image
+      run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-review --file Dockerfile.php8-review
+    - name: Push with commit php8 tag
+      run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-review
 
     - name: Delete old unused container images
       uses: snok/container-retention-policy@v1
