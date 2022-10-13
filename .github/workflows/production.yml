@@ -23,17 +23,23 @@ jobs:
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login ghcr.io --username automation@linkorb.com --password-stdin
 
     #php7
+    #tag with temp tag to make sure trivy scans the new version
     - name: Build the container image
-      run: docker build . --tag ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest --file Dockerfile.php7
+      run: docker build . --tag php-docker-base:trivytemp --file Dockerfile.php7
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest
+        image-ref: php-docker-base:trivytemp
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
+
+    - name: Retag new image with latest tag so we can push the scanned version
+      run: docker image tag php-docker-base:trivytemp ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest
+
     - name: Push with latest tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:latest
     - name: Retag new image with commit hash
