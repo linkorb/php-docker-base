@@ -52,7 +52,8 @@ RUN mkdir -p /app/config/secrets/dev \
   && mkdir -p /app/public/build \
   && chown -R www-data:www-data /app \
   && chown -R www-data:www-data /var/www \
-  && a2enmod rewrite
+  && a2enmod rewrite \
+  && a2enmod headers
 
 COPY --chown=www-data:www-data index.html /app
 
@@ -60,8 +61,7 @@ WORKDIR /app
 
 USER root
 
-COPY app-docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+#COPY app-docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+#ENTRYPOINT ["docker-entrypoint"]
 
-ENTRYPOINT ["docker-entrypoint"]
-
-CMD ["apache2-foreground"]
+ENTRYPOINT ["apache2-foreground"]
