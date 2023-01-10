@@ -61,5 +61,8 @@ WORKDIR /app
 
 USER root
 
-COPY app-docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-ENTRYPOINT ["docker-entrypoint"]
+ENTRYPOINT ["docker-php-entrypoint"]
+# https://httpd.apache.org/docs/2.4/stopping.html#gracefulstop
+STOPSIGNAL SIGWINCH
+
+CMD ["apache2-foreground"]
