@@ -60,9 +60,3 @@ COPY --chown=www-data:www-data index.html /app
 WORKDIR /app
 
 USER root
-
-ENTRYPOINT ["docker-php-entrypoint"]
-# https://httpd.apache.org/docs/2.4/stopping.html#gracefulstop
-STOPSIGNAL SIGWINCH
-
-CMD ["apache2-foreground"]
