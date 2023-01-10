@@ -61,7 +61,5 @@ WORKDIR /app
 
 USER root
 
-#COPY app-docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-#ENTRYPOINT ["docker-entrypoint"]
-
-ENTRYPOINT ["apache2-foreground"]
+COPY app-docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+ENTRYPOINT ["docker-entrypoint"]
