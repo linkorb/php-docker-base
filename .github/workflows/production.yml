@@ -98,4 +98,4 @@ jobs:
         keep-at-least: 10
         skip-tags: latest
         untagged-only: false
-        token: ${{ secrets.DOCKER_PASSWORD }}
+        token: ${{ secrets.GITHUB_TOKEN }}
