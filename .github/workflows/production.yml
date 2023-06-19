@@ -88,14 +88,9 @@ jobs:
     - name: Push with commit php8-review tag
       run: docker push ghcr.io/linkorb/${{ env.CI_REPOSITORY_NAME }}:php8-review
 
-    - name: Delete old unused container images
-      uses: snok/container-retention-policy@v1
+    - name: Delete old versions of the package, keeping a few of the newest
+      uses: actions/delete-package-versions@v4
       with:
-        image-names: "${{ env.CI_REPOSITORY_NAME }}"
-        cut-off: A month ago UTC
-        account-type: org
-        org-name: linkorb
-        keep-at-least: 10
-        skip-tags: latest
-        untagged-only: false
-        token: ${{ secrets.GITHUB_TOKEN }}
+        package-name: ${{ env.CI_REPOSITORY_NAME }}
+        package-type: container
+        min-versions-to-keep: 8
