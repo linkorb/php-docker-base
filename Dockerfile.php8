@@ -45,6 +45,15 @@ RUN curl https://deb.nodesource.com/setup_18.x -o install_node.sh \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg \
+    | gpg --dearmor >> /usr/share/keyrings/yarnkey.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" > /etc/apt/sources.list.d/yarn.list \
+  && apt-get update \
+  && apt-get install yarn \
+  && apt-get autoremove \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
 RUN docker-php-ext-install bz2 \
   && install-php-extensions apcu gd gmp intl opcache pdo_mysql pdo_pgsql sockets zip imap mailparse soap \
   && apt-get autoremove \
