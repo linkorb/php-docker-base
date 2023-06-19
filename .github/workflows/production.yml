@@ -17,7 +17,9 @@ jobs:
       uses: FranzDiebold/github-env-vars-action@v2
 
     - name: Shallow clone code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: GHCR login
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login ghcr.io --username automation@linkorb.com --password-stdin
