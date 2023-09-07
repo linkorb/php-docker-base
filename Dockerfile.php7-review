@@ -5,6 +5,10 @@ RUN mkdir -p /opt
 
 WORKDIR /opt/
 
+# Do not run Composer as root/super user! See https://getcomposer.org/root for details
+# Aborting as no plugin should be loaded if running as super user is not explicitly allowed
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # install php-tools
 RUN git clone https://github.com/linkorb/php-tools.git
 RUN cd php-tools &&  COMPOSER_MEMORY_LIMIT=-1 /usr/bin/composer install
