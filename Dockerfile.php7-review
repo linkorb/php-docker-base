@@ -17,7 +17,7 @@ RUN cd php-tools &&  COMPOSER_MEMORY_LIMIT=-1 /usr/bin/composer install
 RUN curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
 RUN mv /opt/bin/reviewdog /usr/local/bin
 
-# add php-tools to search path
-RUN echo "export PATH=$PATH:/opt/php-tools/bin" >> /root/.bashrc
+# add php-tools to search path globally
+RUN echo "export PATH=$PATH:/opt/php-tools/bin" >> /etc/bash.bashrc
 
 ENTRYPOINT ["apache2-foreground"]
