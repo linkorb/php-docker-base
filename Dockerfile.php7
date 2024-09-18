@@ -58,7 +58,7 @@ RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg \
   && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install bz2 \
-  && install-php-extensions apcu gd gmp intl opcache pdo_mysql pdo_pgsql sockets zip imap mailparse soap \
+  && install-php-extensions apcu gd gmp intl opcache pdo_mysql pdo_pgsql sockets zip imap mailparse soap bcmath \
   && apt-get autoremove \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
