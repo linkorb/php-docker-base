@@ -1,6 +1,5 @@
 FROM ghcr.io/linkorb/php-docker-base:php8
 
-
 RUN mkdir -p /opt
 
 WORKDIR /opt/
@@ -20,10 +19,18 @@ RUN mv /opt/bin/reviewdog /usr/local/bin
 # add php-tools to search path globally
 RUN echo "export PATH=$PATH:/opt/php-tools/bin" >> /etc/bash.bashrc
 
+
 RUN composer global require icanhazstring/composer-unused \
   && ln -s /root/.config/composer/vendor/bin/composer-unused /usr/local/bin/composer-unused
 
+# Install yamllint
 RUN apt-get update && apt-get install -y python3-pip && python3 -m pip install yamllint --break-system-packages
+
+# Ensure /app/public directory exists
+RUN mkdir -p /app/public
+
+# Copy index.html to /app/public
+COPY index.html /app/public/
 
 # Caused the appearance of a git untracked index.html file within the GitHub codespace (when image used as
 # the base of a devcontainer)
