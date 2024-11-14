@@ -39,6 +39,10 @@ jobs:
       run: docker build . --tag php-docker-base:trivytemp --file Dockerfile.${{ matrix.php }}
 
     - name: Run Trivy vulnerability scanner
+      # XXX disabled because it fails to download the vulnerability database from GitHub due to rate limiting issues.
+      # See https://github.com/aquasecurity/trivy-action/issues/389
+      # Requires the vulnerability database to be stored privately and use that instead.
+      if: false
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: php-docker-base:trivytemp
