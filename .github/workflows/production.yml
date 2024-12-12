@@ -58,7 +58,7 @@ jobs:
     - name: Build the review container image
       run: docker build . --tag ghcr.io/${{ github.repository_owner }}/${{ env.CI_REPOSITORY_NAME }}:${{ matrix.php }}-review --file Dockerfile.${{ matrix.php }}-review
     - name: Push with commit *-review tag
-      run: docker push ghcr.io/${{ github.repository_owner }}/${{ env.CI_REPOSITORY_NAME }}:${{ matrix.php }}-review
+      run: docker push ghcr.io/${{ env.CI_REPOSITORY_OWNER_SLUG }}/${{ env.CI_REPOSITORY_NAME }}:${{ matrix.php }}-review
 
 
   cleanup:
