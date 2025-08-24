@@ -14,8 +14,7 @@ RUN git clone https://github.com/linkorb/php-tools.git
 RUN cd php-tools &&  COMPOSER_MEMORY_LIMIT=-1 /usr/bin/composer install
 
 # install reviewdog
-RUN curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
-RUN mv /opt/bin/reviewdog /usr/local/bin
+RUN curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
 
 # add php-tools to search path globally
 RUN echo "export PATH=$PATH:/opt/php-tools/bin" >> /etc/bash.bashrc
