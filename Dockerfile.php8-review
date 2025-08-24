@@ -10,8 +10,7 @@ WORKDIR /opt/
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # install reviewdog
-RUN curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
-RUN mv /opt/bin/reviewdog /usr/local/bin
+RUN curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
 
 RUN composer global require icanhazstring/composer-unused \
   && ln -s /root/.config/composer/vendor/bin/composer-unused /usr/local/bin/composer-unused
