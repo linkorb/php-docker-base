@@ -20,9 +20,6 @@ jobs:
           - php8
 
     steps:
-    - name: GitHub Environment Variables Action
-      uses: FranzDiebold/github-env-vars-action@v2
-
     - name: Shallow clone code
       uses: actions/checkout@v4
       with:
@@ -32,7 +29,7 @@ jobs:
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ env.CI_REPOSITORY_OWNER_SLUG }}
+        username: ${{ github.repository_owner }} # ghcr logins allow mixed case usernames
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build the container image
@@ -49,35 +46,33 @@ jobs:
         severity: 'CRITICAL,HIGH'
 
     - name: Retag new image with latest tag so we can push the scanned version
-      run: docker image tag php-docker-base:trivytemp ghcr.io/${{ env.CI_REPOSITORY_OWNER_SLUG }}/${{ env.CI_REPOSITORY_NAME }}:${{ matrix.php }}
+      run: docker image tag php-docker-base:trivytemp "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}"
 
     - name: Push with commit ${{ matrix.php }} tag
-      run: docker push ghcr.io/${{ env.CI_REPOSITORY_OWNER_SLUG }}/${{ env.CI_REPOSITORY_NAME }}:${{ matrix.php }}
+      run: docker push "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}"
 
     #review containers
     - name: Build the review container image
-      run: docker build . --tag ghcr.io/${{ github.repository_owner }}/${{ env.CI_REPOSITORY_NAME }}:${{ matrix.php }}-review --file Dockerfile.${{ matrix.php }}-review
-    - name: Push with commit *-review tag
-      run: docker push ghcr.io/${{ env.CI_REPOSITORY_OWNER_SLUG }}/${{ env.CI_REPOSITORY_NAME }}:${{ matrix.php }}-review
+      run: docker build . --tag "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}-review" --file Dockerfile.${{ matrix.php }}-review
 
+    - name: Push with commit *-review tag
+      run: docker push "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}-review"
 
   cleanup:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-    - name: GitHub Environment Variables Action
-      uses: FranzDiebold/github-env-vars-action@v2
 
     - name: Login to Container Registry ghcr.io
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ env.CI_REPOSITORY_OWNER_SLUG }}
+        username: ${{ github.repository_owner }} #ghcr logins allow mixed case usernames
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Delete old versions of the package, keeping a few of the newest
       uses: actions/delete-package-versions@v5
       with:
-        package-name: ${{ env.CI_REPOSITORY_NAME }}
+        package-name: ${{ github.event.repository.name }}
         package-type: container
         min-versions-to-keep: 8
