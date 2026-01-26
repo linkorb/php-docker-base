@@ -6,7 +6,6 @@
 
 engine = On
 short_open_tag = Off
-asp_tags = Off
 precision = 14
 output_buffering = 4096
 
@@ -62,7 +61,6 @@ auto_prepend_file =
 auto_append_file =
 
 default_mimetype = "text/html"
-always_populate_raw_post_data = -1
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Paths and Directories ;
@@ -126,20 +124,6 @@ odbc.max_persistent = -1
 odbc.max_links = -1
 odbc.defaultlrl = 4096
 odbc.defaultbinmode = 1
-
-[MySQL]
-mysql.allow_local_infile = On
-mysql.allow_persistent = On
-mysql.cache_size = 2000
-mysql.max_persistent = -1
-mysql.max_links = -1
-mysql.default_port =
-mysql.default_socket =
-mysql.default_host =
-mysql.default_user =
-mysql.default_password =
-mysql.connect_timeout = 60
-mysql.trace_mode = Off
 
 [MySQLi]
 mysqli.max_persistent = -1
