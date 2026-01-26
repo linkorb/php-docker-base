@@ -24,7 +24,7 @@ jobs:
       uses: FranzDiebold/github-env-vars-action@v2
 
     - name: Shallow clone code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
