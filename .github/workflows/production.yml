@@ -6,7 +6,7 @@ on:
     branches:
     - master
   schedule:
-  - cron: 00 4 * * *
+  - cron: 00 4 * * 4
 
 jobs:
   build:
