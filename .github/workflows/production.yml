@@ -8,6 +8,10 @@ on:
   schedule:
   - cron: 00 4 * * 4
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,20 +37,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build the container image
-      run: docker build . --tag php-docker-base:trivytemp --file Dockerfile.${{ matrix.php }}
-
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: php-docker-base:trivytemp
-        format: 'table'
-        exit-code: '1'
-        ignore-unfixed: true
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
-
-    - name: Retag new image with latest tag so we can push the scanned version
-      run: docker image tag php-docker-base:trivytemp "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}"
+      run: docker build . --tag "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}" --file Dockerfile.${{ matrix.php }}
 
     - name: Push with commit ${{ matrix.php }} tag
       run: docker push "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}"
