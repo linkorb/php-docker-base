@@ -38,14 +38,14 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build the container image
-      run: docker build . --tag "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}" --file Dockerfile.${{ matrix.php }}
+      run: docker build --pull . --tag "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}" --file Dockerfile.${{ matrix.php }}
 
     - name: Push with commit ${{ matrix.php }} tag
       run: docker push "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}"
 
     #review containers
     - name: Build the review container image
-      run: docker build . --tag "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}-review" --file Dockerfile.${{ matrix.php }}-review
+      run: docker build --pull . --tag "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}-review" --file Dockerfile.${{ matrix.php }}-review
 
     - name: Push with commit *-review tag
       run: docker push "ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${{ matrix.php }}-review"
