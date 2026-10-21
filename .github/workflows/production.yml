@@ -33,7 +33,7 @@ jobs:
       uses: docker/login-action@v4
       with:
         registry: ghcr.io
-        username: ${{ github.repository_owner }} # ghcr logins allow mixed case usernames
+        username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build the container image
@@ -58,7 +58,7 @@ jobs:
       uses: docker/login-action@v4
       with:
         registry: ghcr.io
-        username: ${{ github.repository_owner }} #ghcr logins allow mixed case usernames
+        username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Delete old versions of the package, keeping a few of the newest
