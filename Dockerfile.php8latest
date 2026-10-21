@@ -1,4 +1,4 @@
-FROM php:apache-bookworm
+FROM php:8.5.12-apache-bookworm
 
 EXPOSE 80
 
